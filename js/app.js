@@ -15,10 +15,13 @@ export default class Sketch {
     this.container = options.dom;
     this.width = this.container.offsetWidth;
     this.height = this.container.offsetHeight;
-    this.renderer = new THREE.WebGLRenderer();
+    this.renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true
+    });
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     this.renderer.setSize(this.width, this.height);
-    this.renderer.setClearColor(0xeeeeee, 1);  
+    //this.renderer.setClearColor(0xeeeeee, 1);  
 
     this.container.appendChild(this.renderer.domElement);
 
@@ -32,7 +35,9 @@ export default class Sketch {
     // var frustumSize = 10;
     // var aspect = window.innerWidth / window.innerHeight;
     // this.camera = new THREE.OrthographicCamera( frustumSize * aspect / - 2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / - 2, -1000, 1000 );
-    this.camera.position.set(0, 0, 2);
+    let dist = 600;
+    this.camera.position.set(0, 0, dist);
+    this.camera.fov = 2*Math.atan((window.innerHeight/2) / dist) * (180/Math.PI);
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.time = 0;
 
@@ -83,7 +88,7 @@ export default class Sketch {
       fragmentShader: fragment
     });
 
-    this.geometry = new THREE.PlaneGeometry(1, 1, 50, 50);
+    this.geometry = new THREE.PlaneGeometry(100, 100, 10, 10);
 
     this.plane = new THREE.Mesh(this.geometry, this.material);
     this.scene.add(this.plane);
@@ -112,3 +117,7 @@ export default class Sketch {
 new Sketch({
   dom: document.getElementById("container")
 });
+
+
+
+

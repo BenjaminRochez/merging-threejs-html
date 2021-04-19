@@ -82,15 +82,15 @@ void main() {
   vec3 newpos = position;
   float PI = 3.1415925;
   //newpos.z += 0.1*sin((newpos.x + 0.25 + time/5.)*2.0*PI);
-  float noise = cnoise(vec3(position.x*4.0, position.y*4. + time/5.0, 0.0));
+  //float noise = cnoise(vec3(position.x*4.0, position.y*4. + time/5.0, 0.0));
   // newpos.z += 0.1 * noise;
 
-  float dist = distance(uv, vec2(0.5));
-  newpos.z += 0.08 * sin(dist*100. + time);
+  //float dist = distance(uv, vec2(0.5));
+  //newpos.z += 0.08 * sin(dist*100. + time);
 
   vUv = uv;
 
   //vNoise = noise;
-  vNoise = dist;
+  //vNoise = dist;
   gl_Position = projectionMatrix * modelViewMatrix * vec4( newpos, 1.0 );
 }  

@@ -19,5 +19,5 @@ void main()	{
 	gl_FragColor = vec4(vUv, 0., 1.);
 	//gl_FragColor = vec4(girlView);
 	//gl_FragColor = girlView + vec4(vNoise);
-	gl_FragColor = vec4(vNoise);
+	//gl_FragColor = vec4(vNoise);
 }
