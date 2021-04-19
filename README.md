@@ -144,3 +144,36 @@ addImages(){
     ...
 }
 ```
+
+## Last part : merge scroll
+
+Use library such as locomotive to trigger the scroll & mock it. 
+
+```
+...
+let currentScroll = 0;
+Promise.all(allDone).then(()=>{
+    ...
+        this.scroll = new Scroll();
+        window.addEventListener('scroll', () =>{
+        this.setPositions();
+        });
+    ...
+});
+...
+setPositions(){
+this.imageStore.forEach(o =>{
+    o.mesh.position.y = this.currentScroll -o.top + this.height / 2 - o.height / 2;
+    o.mesh.position.x = o.left - this.width / 2 + o.width/2;
+})
+}
+...
+render(){
+    ...
+    this.scroll.render();
+    this.currentScroll = this.scroll.scrollToRender;
+    this.setPositions();
+    ...
+}
+...
+```

@@ -7,7 +7,7 @@ import fragment from "./shader/fragment.glsl";
 import vertex from "./shader/vertex.glsl";
 import * as dat from "dat.gui";
 import gsap from "gsap";
-
+import Scroll from "./lib/scroll";
 
 export default class Sketch {
   constructor(options) {
@@ -63,16 +63,21 @@ export default class Sketch {
 
     this.isPlaying = true;
     
-    let allDone = [fontOpen,fontPlayfair,preloadImages]
+    let allDone = [fontOpen,fontPlayfair,preloadImages];
+    let currentScroll = 0;
     Promise.all(allDone).then(()=>{
+      this.scroll = new Scroll();
       this.addImages();
       this.setPositions();
-      this.addObjects();
+      //this.addObjects();
       
       this.resize();
       this.render();
       this.setupResize();
       // this.settings();
+      window.addEventListener('scroll', () =>{
+        this.setPositions();
+      });
     });
   }
 
@@ -128,7 +133,7 @@ export default class Sketch {
 
   setPositions(){
     this.imageStore.forEach(o =>{
-      o.mesh.position.y = -o.top + this.height / 2 - o.height / 2;
+      o.mesh.position.y = this.currentScroll -o.top + this.height / 2 - o.height / 2;
       o.mesh.position.x = o.left - this.width / 2 + o.width/2;
     })
   }
@@ -170,7 +175,10 @@ export default class Sketch {
   render() {
     if (!this.isPlaying) return;
     this.time += 0.05;
-    this.material.uniforms.time.value = this.time;
+    this.scroll.render();
+    this.currentScroll = this.scroll.scrollToRender;
+    this.setPositions();
+    //this.material.uniforms.time.value = this.time;
     requestAnimationFrame(this.render.bind(this));
     this.renderer.render(this.scene, this.camera);
   }
