@@ -77,13 +77,13 @@ export default class Sketch {
         time: { value: 0 },
         resolution: { value: new THREE.Vector4() },
       },
-      // wireframe: true,
+      //wireframe: true,
       // transparent: true,
       vertexShader: vertex,
       fragmentShader: fragment
     });
 
-    this.geometry = new THREE.PlaneGeometry(1, 1, 1, 1);
+    this.geometry = new THREE.PlaneGeometry(1, 1, 50, 50);
 
     this.plane = new THREE.Mesh(this.geometry, this.material);
     this.scene.add(this.plane);
