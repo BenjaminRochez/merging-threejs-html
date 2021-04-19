@@ -1,7 +1,8 @@
 import * as THREE from "three";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 // import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-
+import FontFaceObserver from 'fontfaceobserver';
+import imagesLoaded from 'imagesloaded';
 import fragment from "./shader/fragment.glsl";
 import vertex from "./shader/vertex.glsl";
 import * as dat from "dat.gui";
@@ -32,6 +33,25 @@ export default class Sketch {
       1000
     );
 
+    this.images = [...document.querySelectorAll('img')];
+
+    const fontOpen = new Promise(resolve => {
+      new FontFaceObserver("Open Sans").load().then(() => {
+        resolve();
+      });
+    });
+
+    const fontPlayfair = new Promise(resolve => {
+      new FontFaceObserver("Playfair Display").load().then(() => {
+        resolve();
+      });
+    });
+
+    // Preload images
+    const preloadImages = new Promise((resolve, reject) => {
+        imagesLoaded(document.querySelectorAll("img"), { background: true }, resolve);
+    });
+
     // var frustumSize = 10;
     // var aspect = window.innerWidth / window.innerHeight;
     // this.camera = new THREE.OrthographicCamera( frustumSize * aspect / - 2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / - 2, -1000, 1000 );
@@ -43,11 +63,17 @@ export default class Sketch {
 
     this.isPlaying = true;
     
-    this.addObjects();
-    this.resize();
-    this.render();
-    this.setupResize();
-    // this.settings();
+    let allDone = [fontOpen,fontPlayfair,preloadImages]
+    Promise.all(allDone).then(()=>{
+      this.addImages();
+      this.setPositions();
+      this.addObjects();
+      
+      this.resize();
+      this.render();
+      this.setupResize();
+      // this.settings();
+    });
   }
 
   settings() {
@@ -69,6 +95,42 @@ export default class Sketch {
     this.renderer.setSize(this.width, this.height);
     this.camera.aspect = this.width / this.height;
     this.camera.updateProjectionMatrix();
+  }
+
+  addImages(){
+    this.imageStore = this.images.map(img =>{
+        let bounds = img.getBoundingClientRect();
+        console.log(bounds);
+
+        let geometry = new THREE.PlaneBufferGeometry(bounds.width, bounds.height, 1, 1);
+        let texture = new THREE.Texture(img);
+        texture.needsUpdate = true;
+        let material = new THREE.MeshBasicMaterial({
+          //color: 0xff0000, 
+          map: texture
+        })
+
+        let mesh = new THREE.Mesh(geometry, material);
+
+        this.scene.add(mesh);
+
+        return {
+          img: img,
+          mesh,
+          top: bounds.top,
+          left: bounds.left,
+          width: bounds.width,
+          height: bounds.height
+        }
+    })
+    //console.log(this.imageStore)
+  }
+
+  setPositions(){
+    this.imageStore.forEach(o =>{
+      o.mesh.position.y = -o.top + this.height / 2 - o.height / 2;
+      o.mesh.position.x = o.left - this.width / 2 + o.width/2;
+    })
   }
 
   addObjects() {
