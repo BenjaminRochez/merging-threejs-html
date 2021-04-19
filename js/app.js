@@ -4,7 +4,6 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 import fragment from "./shader/fragment.glsl";
 import vertex from "./shader/vertex.glsl";
-import girl from '../img/girl.jpg';
 import * as dat from "dat.gui";
 import gsap from "gsap";
 
@@ -19,7 +18,7 @@ export default class Sketch {
     this.renderer = new THREE.WebGLRenderer();
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     this.renderer.setSize(this.width, this.height);
-    this.renderer.setClearColor(0x000000, 1); 
+    this.renderer.setClearColor(0xeeeeee, 1);  
 
     this.container.appendChild(this.renderer.domElement);
 
@@ -76,7 +75,6 @@ export default class Sketch {
       side: THREE.DoubleSide,
       uniforms: {
         time: { value: 0 },
-        girlTexture: { value: new THREE.TextureLoader().load(girl) },
         resolution: { value: new THREE.Vector4() },
       },
       wireframe: true,
