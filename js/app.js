@@ -120,7 +120,8 @@ export default class Sketch {
         vec2 newUV = vUv;
         // step return 0 or 1 depending which one is bigger
         // smoothstep applies a gradient to the step
-        float area = smoothstep(0.4, 0., vUv.y) - smoothstep(0.6, 1., vUv.y);
+        float area = smoothstep(0.4, 0., vUv.y);
+        //float area = smoothstep(0.4, 0., vUv.y) - smoothstep(0.6, 1., vUv.y);
         area = pow(area,4.);
 
         //newUV.x += (vUv.x - 0.5)*0.5*vUv.y;
@@ -157,7 +158,7 @@ export default class Sketch {
       if (intersects.length > 0) {
         let obj = intersects[0].object;
         obj.material.uniforms.hover.value =  intersects[0].uv;
-        console.log(intersects[0]);
+        //console.log(intersects[0]);
       }
     }, false);
 
