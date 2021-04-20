@@ -1,5 +1,7 @@
 varying float vNoise;
-uniform sampler2D girlTexture;
+varying float distNoise;
+//uniform sampler2D girlTexture;
+uniform sampler2D uImage;
 varying vec2 vUv;
 uniform float time;
 void main()	{
@@ -11,13 +13,18 @@ void main()	{
 
 	vec2 newUV = vUv;
 
-	newUV = vec2(newUV.x + 0.05*sin(newUV.y*10.0 + time), newUV.y); 
+	//newUV = vec2(newUV.x + 0.05*sin(newUV.y*10.0 + time), newUV.y); 
 
-	vec4 girlView = texture2D(girlTexture, newUV);
+	//vec4 girlView = texture2D(girlTexture, newUV);
 
 	gl_FragColor = vec4(finalColor,1.);
 	gl_FragColor = vec4(vUv, 0., 1.);
 	//gl_FragColor = vec4(girlView);
 	//gl_FragColor = girlView + vec4(vNoise);
 	//gl_FragColor = vec4(vNoise);
+
+	vec4 textureImage = texture2D(uImage, newUV);
+
+	gl_FragColor = textureImage;
+	gl_FragColor.rgb += 0.05*vec3(distNoise);
 }
